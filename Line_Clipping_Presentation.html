@@ -18,10 +18,8 @@
             padding: 0;
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             overflow: hidden;
-            /* Liquid gradient animation */
-            background: linear-gradient(45deg, #120A8F, #FF007A, #00C2FF, #7928CA);
-            background-size: 300% 300%;
-            animation: liquidGradient 12s ease infinite;
+            /* Global Page Settings */
+            background-color: #050510;
             color: #ffffff;
             height: 100vh;
             display: flex;
@@ -29,55 +27,13 @@
             align-items: center;
         }
 
-        /* Abstract glowing orbs for liquid effect */
-        .orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            z-index: -1;
-            animation: floatOrb 10s infinite ease-in-out alternate;
-        }
-
-        .orb-1 {
-            width: 400px;
-            height: 400px;
-            background: rgba(0, 194, 255, 0.5);
-            top: -100px;
-            left: 10%;
-            animation-delay: 0s;
-        }
-
-        .orb-2 {
-            width: 500px;
-            height: 500px;
-            background: rgba(255, 0, 122, 0.5);
-            bottom: -150px;
-            right: 5%;
-            animation-delay: -3s;
-        }
-
-        @keyframes liquidGradient {
-            0% {
-                background-position: 0% 50%;
-            }
-
-            50% {
-                background-position: 100% 50%;
-            }
-
-            100% {
-                background-position: 0% 50%;
-            }
-        }
-
-        @keyframes floatOrb {
-            0% {
-                transform: translate(0, 0) scale(1);
-            }
-
-            100% {
-                transform: translate(30px, -50px) scale(1.1);
-            }
+        /* Dynamic Canvas Elements Backgrounds */
+        #metaverseBg {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: -2;
+            background-color: #050510;
         }
 
         /* 16:9 Aspect Ratio Slide Container */
@@ -502,9 +458,8 @@
         <button class="tool-btn" id="clearBtn">Clear All</button>
     </div>
 
-    <!-- Ambient background orbs -->
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
+    <!-- Dynamic Metaverse HTML5 Canvas -->
+    <canvas id="metaverseBg"></canvas>
 
     <div class="slide-container">
 
@@ -818,6 +773,24 @@
         const counter = document.getElementById('currentSlide');
         const progressBar = document.getElementById('progressBar');
 
+        // Background Mode Logic
+        let bgMode = 0;
+        const slideToMode = [
+            0, // S1: Title (Network)
+            1, // S2: Intro (Grid)
+            3, // S3: Cases (Orbs)
+            1, // S4: CS Concept (Grid)
+            2, // S5: Codes (Data Rain)
+            0, // S6: CS Steps (Network)
+            3, // S7: CS Pros/Cons (Orbs)
+            4, // S8: LB Concept (Warp)
+            2, // S9: Parametric Eq (Data Rain)
+            1, // S10: LB Steps (Grid)
+            3, // S11: LB Pros/Cons (Orbs)
+            0, // S12: Conclusion (Network)
+            4  // S13: QA (Warp)
+        ];
+
         // Initialize F11 Fullscreen shortcut hint 
         document.addEventListener('keydown', function (e) {
             if (e.key === 'ArrowRight' || e.key === 'Space') changeSlide(1);
@@ -838,6 +811,9 @@
                     }
                 }
             });
+
+            // Set specific background mode
+            bgMode = slideToMode[currentIdx] || 0;
 
             prevBtn.disabled = currentIdx === 0;
             nextBtn.disabled = currentIdx === slides.length - 1;
@@ -976,6 +952,116 @@
             
             window.addEventListener('touchend', stop);
         }
+
+        // --- METAVERSE DYNAMIC CANVAS BACKGROUND ---
+        const metaCanvas = document.getElementById('metaverseBg');
+        const mctx = metaCanvas.getContext('2d');
+        let mw = metaCanvas.width = window.innerWidth;
+        let mh = metaCanvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            mw = metaCanvas.width = window.innerWidth;
+            mh = metaCanvas.height = window.innerHeight;
+        });
+
+        const particles = Array.from({length: 100}, () => ({
+            x: Math.random()*1920, y: Math.random()*1080,
+            vx: (Math.random()-0.5)*1.5, vy: (Math.random()-0.5)*1.5,
+            s: Math.random()*2+1
+        }));
+        let gridY = 0;
+        const colCount = Math.floor(1920/25);
+        const drops = Array(colCount).fill(1).map(() => Math.random()*1080);
+        const chars = "XYZ10ABCEFアイウエオカキクケコサシスセソ0101";
+        const orbs = Array.from({length: 20}, () => ({
+            x: Math.random()*1920, y: Math.random()*1080 + 1080,
+            s: Math.random()*80 + 30, v: Math.random()*1.5 + 0.5,
+            hue: Math.random()*60 + 260
+        }));
+        const stars = Array.from({length: 250}, () => ({
+            x: Math.random()*1920 - 960, y: Math.random()*1080 - 540,
+            z: Math.random()*1920
+        }));
+
+        function renderMetaverse() {
+            if (bgMode === 2) {
+                mctx.fillStyle = 'rgba(5, 5, 16, 0.2)';
+                mctx.fillRect(0, 0, mw, mh);
+            } else {
+                mctx.fillStyle = '#050510';
+                mctx.fillRect(0, 0, mw, mh);
+            }
+
+            if (bgMode === 0) {
+                mctx.fillStyle = '#00C2FF';
+                mctx.strokeStyle = 'rgba(0, 194, 255, 0.15)';
+                particles.forEach((p, i) => {
+                    p.x += p.vx; p.y += p.vy;
+                    if(p.x < 0 || p.x > mw) p.vx *= -1;
+                    if(p.y < 0 || p.y > mh) p.vy *= -1;
+                    mctx.beginPath(); mctx.arc(p.x, p.y, p.s, 0, Math.PI*2); mctx.fill();
+                    for(let j=i+1; j<particles.length; j++) {
+                        let p2 = particles[j];
+                        let d = Math.hypot(p.x-p2.x, p.y-p2.y);
+                        if(d < 150) {
+                            mctx.beginPath(); mctx.moveTo(p.x, p.y); mctx.lineTo(p2.x, p2.y); mctx.stroke();
+                        }
+                    }
+                });
+            } else if (bgMode === 1) {
+                mctx.strokeStyle = 'rgba(255, 0, 122, 0.6)';
+                mctx.lineWidth = 2;
+                gridY += 1.5; if(gridY > 40) gridY = 0;
+                mctx.save();
+                mctx.translate(mw/2, mh/2);
+                mctx.beginPath();
+                for(let i=0; i<mh/2; i+=40) {
+                    let y = i + gridY;
+                    mctx.moveTo(-mw, y); mctx.lineTo(mw, y);
+                }
+                for(let i=-mw; i<mw; i+=80) {
+                    mctx.moveTo(0, 0); mctx.lineTo(i*3, mh);
+                }
+                mctx.stroke();
+                mctx.restore();
+                mctx.fillStyle = 'rgba(0, 194, 255, 0.1)';
+                mctx.beginPath(); mctx.arc(mw/2, mh/2 - 50, 150, 0, Math.PI*2); mctx.fill();
+            } else if (bgMode === 2) {
+                mctx.font = 'bold 18px monospace';
+                for(let i=0; i<drops.length; i++) {
+                    let text = chars.charAt(Math.floor(Math.random() * chars.length));
+                    mctx.fillStyle = `hsl(${Math.random()*60 + 170}, 100%, 60%)`;
+                    mctx.fillText(text, i*25, drops[i]*25);
+                    if(drops[i]*25 > mh && Math.random() > 0.975) drops[i] = 0;
+                    drops[i]+=0.8;
+                }
+            } else if (bgMode === 3) {
+                orbs.forEach(o => {
+                    o.y -= o.v;
+                    if(o.y < -150) { o.y = mh + 150; o.x = Math.random()*mw; }
+                    let grad = mctx.createRadialGradient(o.x, o.y, 0, o.x, o.y, o.s);
+                    grad.addColorStop(0, `hsla(${o.hue}, 100%, 50%, 0.6)`);
+                    grad.addColorStop(1, `hsla(${o.hue}, 100%, 50%, 0)`);
+                    mctx.fillStyle = grad;
+                    mctx.beginPath(); mctx.arc(o.x, o.y, o.s, 0, Math.PI*2); mctx.fill();
+                });
+            } else if (bgMode === 4) {
+                mctx.fillStyle = '#fff';
+                mctx.save();
+                mctx.translate(mw/2, mh/2);
+                stars.forEach(s => {
+                    s.z -= 6;
+                    if(s.z <= 0) { s.x = Math.random()*1920 - 960; s.y = Math.random()*1080 - 540; s.z = 1920; }
+                    let k = 200.0 / s.z;
+                    let px = s.x * k; let py = s.y * k;
+                    let size = Math.max(0.1, (1 - s.z / 1920) * 3);
+                    mctx.beginPath(); mctx.arc(px, py, size, 0, Math.PI*2); mctx.fill();
+                });
+                mctx.restore();
+            }
+            requestAnimationFrame(renderMetaverse);
+        }
+        renderMetaverse();
     </script>
 </body>
 
