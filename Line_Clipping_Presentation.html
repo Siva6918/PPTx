@@ -9,19 +9,7 @@
             --glass-bg: rgba(255, 255, 255, 0.12);
             --glass-border: rgba(255, 255, 255, 0.22);
             --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Line Clipping Algorithms</title>
-    <style>
-        :root {
-            --glass-bg: rgba(255, 255, 255, 0.12);
-            --glass-border: rgba(255, 255, 255, 0.22);
-            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
         }
-
         body {
             margin: 0;
             padding: 0;
@@ -38,13 +26,11 @@
             perspective: 2000px;
             touch-action: none;
         }
-
         @keyframes liquidGradient {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
-
         .orb {
             position: absolute;
             border-radius: 50%;
@@ -52,15 +38,12 @@
             z-index: -1;
             animation: floatOrb 10s infinite ease-in-out alternate;
         }
-
         .orb-1 { width: 400px; height: 400px; background: rgba(0, 194, 255, 0.4); top: -100px; left: 10%; }
         .orb-2 { width: 500px; height: 500px; background: rgba(255, 0, 122, 0.4); bottom: -150px; right: 5%; animation-delay: -3s; }
-
         @keyframes floatOrb {
             0% { transform: translate(0, 0) scale(1); }
             100% { transform: translate(40px, -60px) scale(1.1); }
         }
-
         .slide-container {
             width: 90vw;
             max-width: 1200px;
@@ -69,7 +52,6 @@
             transform-style: preserve-3d;
             z-index: 1;
         }
-
         .slide {
             position: absolute;
             width: 100%;
@@ -90,44 +72,40 @@
             backface-visibility: hidden;
             overflow-y: auto;
         }
-
         .slide.active {
             visibility: visible;
             opacity: 1;
             transform: translateZ(0) rotateY(0);
         }
-
         .slide.exit-left { transform: rotateY(-90deg) translateZ(500px); opacity: 0; }
         .slide.exit-right { transform: rotateY(90deg) translateZ(500px); opacity: 0; }
         .slide.enter-right { transform: rotateY(90deg) translateZ(500px); opacity: 0; }
         .slide.enter-left { transform: rotateY(-90deg) translateZ(500px); opacity: 0; }
-
         h1 { font-size: clamp(2rem, 8vw, 3.5rem); text-align: center; margin-top: auto; margin-bottom: 20px; }
         .subtitle { font-size: clamp(1.2rem, 5vw, 2rem); text-align: center; margin-bottom: auto; }
         h2 { font-size: clamp(1.8rem, 6vw, 2.8rem); border-bottom: 2px solid rgba(255, 255, 255, 0.3); padding-bottom: 15px; margin-bottom: 30px; }
-        ul { font-size: clamp(1rem, 4vw, 1.8rem); line-height: 1.7; }
-
+        ul, ol { font-size: clamp(1rem, 4vw, 1.8rem); line-height: 1.7; }
+        
         #drawingCanvas {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            z-index: 9999;
+            z-index: 1000;
             pointer-events: none;
             touch-action: none;
         }
         #drawingCanvas.active { pointer-events: all; cursor: crosshair; }
-
+        
         .canvas-tools {
             position: fixed;
             top: 20px;
             right: 20px;
             display: flex;
             gap: 10px;
-            z-index: 10000;
+            z-index: 1001;
         }
-
         .tool-btn {
             background: rgba(255, 255, 255, 0.2);
             border: 1px solid rgba(255, 255, 255, 0.4);
@@ -139,13 +117,11 @@
             transition: all 0.3s;
             font-weight: bold;
         }
-
         .tool-btn.active {
             background: rgba(255, 255, 255, 0.5);
             box-shadow: 0 0 15px rgba(255,255,255,0.5);
             transform: scale(1.05);
         }
-
         .controls {
             position: fixed;
             bottom: 40px;
@@ -154,7 +130,6 @@
             gap: 15px;
             z-index: 10;
         }
-
         .nav-btn {
             background: rgba(255, 255, 255, 0.2);
             border: 1px solid rgba(255, 255, 255, 0.5);
@@ -169,11 +144,11 @@
             font-size: 1.5rem;
             transition: 0.3s;
         }
-
+        .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
         .progress-bar { position: fixed; bottom: 0; left: 0; height: 6px; background: rgba(255, 255, 255, 0.1); width: 100%; }
         .progress { height: 100%; background: #00C2FF; width: 0%; transition: width 0.4s ease; }
         .slide-counter { position: fixed; bottom: 45px; left: 40px; font-size: 1.2rem; font-weight: bold; }
-
+        
         @media (max-width: 768px) {
             .slide-container { aspect-ratio: auto; height: 75vh; width: 95vw; }
             .slide { padding: 30px; }
@@ -187,26 +162,25 @@
 <body>
     <div class="orb orb-1"></div>
     <div class="orb orb-2"></div>
-
     <canvas id="drawingCanvas"></canvas>
-
+    
     <div class="canvas-tools">
         <button class="tool-btn" id="penBtn">Pen</button>
         <button class="tool-btn" id="eraserBtn">Eraser</button>
         <button class="tool-btn" id="clearBtn">Clear All</button>
     </div>
-
+    
     <div class="slide-container" id="slideContainer">
         <div class="slide active">
             <h1>Line Clipping Algorithms</h1>
             <p class="subtitle">Cohen–Sutherland & Liang–Barsky</p>
             <p style="text-align: center; margin-top: 20px; font-size: 1.2rem;">
-                Venkata Siva Reddy. V<br>
-                23091A05T2<br>
+                Venkata Siva Reddy. V<br><br>
+                23091A05T2<br><br>
                 CSE
             </p>
         </div>
-
+        
         <div class="slide">
             <h2>Introduction</h2>
             <ul>
@@ -216,7 +190,7 @@
                 <li>Improves rendering performance drastically.</li>
             </ul>
         </div>
-
+        
         <div class="slide">
             <h2>Types of Cases</h2>
             <ul>
@@ -225,7 +199,7 @@
                 <li>✂️ <b>Line partially inside</b> → Clip</li>
             </ul>
         </div>
-
+        
         <div class="slide">
             <h2>Cohen–Sutherland Concept</h2>
             <ul>
@@ -235,7 +209,7 @@
                 <li>Quickly assesses trivial accept/reject.</li>
             </ul>
         </div>
-
+        
         <div class="slide">
             <h2>Region Codes (Outcodes)</h2>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 1.4rem; padding: 20px;">
@@ -246,17 +220,17 @@
                 <div style="grid-column: span 2; text-align: center;">Inside Window → <b>0000</b></div>
             </div>
         </div>
-
+        
         <div class="slide">
             <h2>Cohen-Sutherland: Steps</h2>
-            <ol style="font-size: 1.5rem; line-height: 1.8;">
+            <ol>
                 <li>Assign 4-bit codes to line endpoints.</li>
                 <li>If both codes are 0000 → <b>Trivially Accept</b>.</li>
                 <li>If Bitwise AND of codes ≠ 0000 → <b>Trivially Reject</b>.</li>
                 <li>Else → Find intersection and clip. Repeat.</li>
             </ol>
         </div>
-
+        
         <div class="slide">
             <h2>Liang–Barsky Concept</h2>
             <ul>
@@ -266,7 +240,7 @@
                 <li>Significantly more efficient than Cohen–Sutherland.</li>
             </ul>
         </div>
-
+        
         <div class="slide">
             <h2>Thank You!</h2>
             <p class="subtitle">Any Questions?</p>
@@ -276,20 +250,20 @@
             </div>
         </div>
     </div>
-
+    
     <div class="slide-counter"><span id="currentSlide">1</span> / 8</div>
-
+    
     <div class="controls">
         <button class="nav-btn" id="prevBtn">←</button>
         <button class="nav-btn" id="nextBtn">→</button>
     </div>
-
+    
     <div class="progress-bar">
         <div class="progress" id="progressBar"></div>
     </div>
-
+    
     <script>
-        // Slide Navigation
+        // Slide Navigation Logic
         let currentIdx = 0;
         let isAnimating = false;
         const slides = document.querySelectorAll('.slide');
@@ -297,23 +271,23 @@
         const nextBtn = document.getElementById('nextBtn');
         const counter = document.getElementById('currentSlide');
         const progressBar = document.getElementById('progressBar');
-
+        
         function updateUI() {
             prevBtn.disabled = currentIdx === 0;
             nextBtn.disabled = currentIdx === slides.length - 1;
             counter.innerText = currentIdx + 1;
             progressBar.style.width = ((currentIdx) / (slides.length - 1)) * 100 + '%';
         }
-
+        
         function changeSlide(direction) {
             if (isAnimating) return;
             const newIdx = currentIdx + direction;
             if (newIdx < 0 || newIdx >= slides.length) return;
-
+            
             isAnimating = true;
             const currentSlide = slides[currentIdx];
             const nextSlide = slides[newIdx];
-
+            
             if (direction > 0) {
                 currentSlide.classList.add('exit-left');
                 nextSlide.classList.add('enter-right');
@@ -321,15 +295,15 @@
                 currentSlide.classList.add('exit-right');
                 nextSlide.classList.add('enter-left');
             }
-
-            nextSlide.offsetHeight;
-
+            
+            nextSlide.offsetHeight; // trigger reflow
+            
             setTimeout(() => {
                 currentSlide.classList.remove('active');
                 nextSlide.classList.add('active');
                 nextSlide.classList.remove('enter-right', 'enter-left');
             }, 50);
-
+            
             setTimeout(() => {
                 currentSlide.classList.remove('exit-left', 'exit-right');
                 currentIdx = newIdx;
@@ -337,25 +311,26 @@
                 updateUI();
             }, 800);
         }
-
-        prevBtn.onclick = () => changeSlide(-1);
-        nextBtn.onclick = () => changeSlide(1);
-
+        
+        prevBtn.addEventListener('click', () => changeSlide(-1));
+        nextBtn.addEventListener('click', () => changeSlide(1));
+        
         document.addEventListener('keydown', e => {
             if (e.key === 'ArrowRight' || e.key === ' ') changeSlide(1);
             if (e.key === 'ArrowLeft') changeSlide(-1);
         });
-
+        
         // Drawing Canvas Logic
         const canvas = document.getElementById('drawingCanvas');
         const ctx = canvas.getContext('2d');
         const penBtn = document.getElementById('penBtn');
         const eraserBtn = document.getElementById('eraserBtn');
         const clearBtn = document.getElementById('clearBtn');
+        
         let isDrawing = false;
         let drawMode = 'none';
-
-        function resize() {
+        
+        function resizeCanvas() {
             const temp = ctx.getImageData(0, 0, canvas.width, canvas.height);
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
@@ -363,25 +338,26 @@
             ctx.lineCap = 'round';
             ctx.lineJoin = 'round';
         }
-        window.addEventListener('resize', resize);
-        resize();
-
+        
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+        
         function setMode(mode) {
             drawMode = (drawMode === mode) ? 'none' : mode;
             canvas.classList.toggle('active', drawMode !== 'none');
             penBtn.classList.toggle('active', drawMode === 'pen');
             eraserBtn.classList.toggle('active', drawMode === 'eraser');
         }
-
-        penBtn.onclick = (e) => { e.stopPropagation(); setMode('pen'); };
-        eraserBtn.onclick = (e) => { e.stopPropagation(); setMode('eraser'); };
-        clearBtn.onclick = (e) => { e.stopPropagation(); ctx.clearRect(0, 0, canvas.width, canvas.height); };
-
+        
+        penBtn.addEventListener('click', (e) => { e.stopPropagation(); setMode('pen'); });
+        eraserBtn.addEventListener('click', (e) => { e.stopPropagation(); setMode('eraser'); });
+        clearBtn.addEventListener('click', (e) => { e.stopPropagation(); ctx.clearRect(0, 0, canvas.width, canvas.height); });
+        
         function getPos(e) {
             const t = e.touches ? e.touches[0] : e;
             return { x: t.clientX, y: t.clientY };
         }
-
+        
         function start(e) {
             if (drawMode === 'none') return;
             isDrawing = true;
@@ -389,10 +365,9 @@
             ctx.beginPath();
             ctx.moveTo(x, y);
         }
-
+        
         function move(e) {
             if (!isDrawing || drawMode === 'none') return;
-            if (e.touches) e.preventDefault();
             const { x, y } = getPos(e);
             
             ctx.lineWidth = drawMode === 'eraser' ? 40 : 4;
@@ -402,437 +377,21 @@
             ctx.lineTo(x, y);
             ctx.stroke();
         }
-
+        
         function stop() {
-            isDrawing = false;
+            if (isDrawing) {
+                ctx.closePath();
+                isDrawing = false;
+            }
         }
-
+        
         canvas.addEventListener('mousedown', start);
         canvas.addEventListener('mousemove', move);
         window.addEventListener('mouseup', stop);
-
+        
         canvas.addEventListener('touchstart', (e) => {
             if (drawMode !== 'none') e.preventDefault();
             start(e);
-        }, { passive: false });
-        canvas.addEventListener('touchmove', (e) => {
-            if (drawMode !== 'none') e.preventDefault();
-            move(e);
-        }, { passive: false });
-        window.addEventListener('touchend', stop);
-
-        updateUI();
-    </script>
-</body>
-</html>
-
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            overflow: hidden;
-            background: linear-gradient(-45deg, #120A8F, #FF007A, #00C2FF, #7928CA);
-            background-size: 400% 400%;
-            animation: liquidGradient 15s ease infinite;
-            color: #ffffff;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            perspective: 2000px;
-            touch-action: none;
-        }
-
-        @keyframes liquidGradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        .orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            z-index: -1;
-            animation: floatOrb 10s infinite ease-in-out alternate;
-        }
-
-        .orb-1 { width: 400px; height: 400px; background: rgba(0, 194, 255, 0.4); top: -100px; left: 10%; }
-        .orb-2 { width: 500px; height: 500px; background: rgba(255, 0, 122, 0.4); bottom: -150px; right: 5%; animation-delay: -3s; }
-
-        @keyframes floatOrb {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(40px, -60px) scale(1.1); }
-        }
-
-        .slide-container {
-            width: 90vw;
-            max-width: 1200px;
-            aspect-ratio: 16 / 9;
-            position: relative;
-            transform-style: preserve-3d;
-        }
-
-        .slide {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: var(--glass-bg);
-            border-radius: 24px;
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            box-shadow: var(--glass-shadow);
-            padding: 60px;
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-            visibility: hidden;
-            opacity: 0;
-            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.8s ease;
-            backface-visibility: hidden;
-            overflow-y: auto;
-        }
-
-        .slide.active {
-            visibility: visible;
-            opacity: 1;
-            transform: translateZ(0) rotateY(0);
-        }
-
-        .slide.exit-left { transform: rotateY(-90deg) translateZ(500px); opacity: 0; }
-        .slide.exit-right { transform: rotateY(90deg) translateZ(500px); opacity: 0; }
-        .slide.enter-right { transform: rotateY(90deg) translateZ(500px); opacity: 0; }
-        .slide.enter-left { transform: rotateY(-90deg) translateZ(500px); opacity: 0; }
-
-        h1 { font-size: clamp(2rem, 8vw, 3.5rem); text-align: center; margin-top: auto; margin-bottom: 20px; }
-        .subtitle { font-size: clamp(1.2rem, 5vw, 2rem); text-align: center; margin-bottom: auto; }
-        h2 { font-size: clamp(1.8rem, 6vw, 2.8rem); border-bottom: 2px solid rgba(255, 255, 255, 0.3); padding-bottom: 15px; margin-bottom: 30px; }
-        ul { font-size: clamp(1rem, 4vw, 1.8rem); line-height: 1.7; }
-
-        #drawingCanvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1000;
-            pointer-events: none;
-            touch-action: none;
-        }
-        #drawingCanvas.active { pointer-events: all; cursor: crosshair; }
-
-        .canvas-tools {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            display: flex;
-            gap: 10px;
-            z-index: 1001;
-        }
-
-        .tool-btn {
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 12px;
-            cursor: pointer;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s;
-            font-weight: bold;
-        }
-
-        .tool-btn.active {
-            background: rgba(255, 255, 255, 0.5);
-            box-shadow: 0 0 15px rgba(255,255,255,0.5);
-            transform: scale(1.05);
-        }
-
-        .controls {
-            position: fixed;
-            bottom: 40px;
-            right: 40px;
-            display: flex;
-            gap: 15px;
-            z-index: 10;
-        }
-
-        .nav-btn {
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            color: white;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1.5rem;
-            transition: 0.3s;
-        }
-
-        .progress-bar { position: fixed; bottom: 0; left: 0; height: 6px; background: rgba(255, 255, 255, 0.1); width: 100%; }
-        .progress { height: 100%; background: #00C2FF; width: 0%; transition: width 0.4s ease; }
-        .slide-counter { position: fixed; bottom: 45px; left: 40px; font-size: 1.2rem; font-weight: bold; }
-
-        @media (max-width: 768px) {
-            .slide-container { aspect-ratio: auto; height: 75vh; width: 95vw; }
-            .slide { padding: 30px; }
-            .controls { bottom: 60px; right: 20px; }
-            .slide-counter { bottom: 65px; left: 20px; }
-            .canvas-tools { top: 10px; right: 10px; }
-            .tool-btn { padding: 8px 12px; font-size: 0.9rem; }
-        }
-    </style>
-</head>
-<body>
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
-
-    <canvas id="drawingCanvas"></canvas>
-
-    <div class="canvas-tools">
-        <button class="tool-btn" id="penBtn">Pen</button>
-        <button class="tool-btn" id="eraserBtn">Eraser</button>
-        <button class="tool-btn" id="clearBtn">Clear All</button>
-    </div>
-
-    <div class="slide-container" id="slideContainer">
-        <!-- Slides content (same as before) -->
-        <div class="slide active">
-            <h1>Line Clipping Algorithms</h1>
-            <p class="subtitle">Cohen–Sutherland & Liang–Barsky</p>
-            <p style="text-align: center; margin-top: 20px; font-size: 1.2rem;">
-                Venkata Siva Reddy. V<br>
-                23091A05T2<br>
-                CSE
-            </p>
-        </div>
-
-        <div class="slide">
-            <h2>Introduction</h2>
-            <ul>
-                <li>Line clipping removes invisible parts of lines.</li>
-                <li>Uses a defined rectangular <b>clipping window</b>.</li>
-                <li>Maintains visual accuracy while rendering.</li>
-                <li>Improves rendering performance drastically.</li>
-            </ul>
-        </div>
-
-        <div class="slide">
-            <h2>Types of Cases</h2>
-            <ul>
-                <li>✅ <b>Line completely inside</b> → Accept</li>
-                <li>❌ <b>Line completely outside</b> → Reject</li>
-                <li>✂️ <b>Line partially inside</b> → Clip</li>
-            </ul>
-        </div>
-
-        <div class="slide">
-            <h2>Cohen–Sutherland Concept</h2>
-            <ul>
-                <li>Divides coordinate space into <b>9 regions</b>.</li>
-                <li>Assigns <b>4-bit region codes</b> (Outcodes).</li>
-                <li>Each endpoint of a line gets an Outcode.</li>
-                <li>Quickly assesses trivial accept/reject.</li>
-            </ul>
-        </div>
-
-        <div class="slide">
-            <h2>Region Codes (Outcodes)</h2>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 1.4rem; padding: 20px;">
-                <div>Top → <b>1000</b></div>
-                <div>Bottom → <b>0100</b></div>
-                <div>Right → <b>0010</b></div>
-                <div>Left → <b>0001</b></div>
-                <div style="grid-column: span 2; text-align: center;">Inside Window → <b>0000</b></div>
-            </div>
-        </div>
-
-        <div class="slide">
-            <h2>Cohen-Sutherland: Steps</h2>
-            <ol style="font-size: 1.5rem; line-height: 1.8;">
-                <li>Assign 4-bit codes to line endpoints.</li>
-                <li>If both codes are 0000 → <b>Trivially Accept</b>.</li>
-                <li>If Bitwise AND of codes ≠ 0000 → <b>Trivially Reject</b>.</li>
-                <li>Else → Find intersection and clip. Repeat.</li>
-            </ol>
-        </div>
-
-        <div class="slide">
-            <h2>Liang–Barsky Concept</h2>
-            <ul>
-                <li>Uses the <b>parametric equation</b> of a line.</li>
-                <li>Focuses on a parameter <b>t</b> (0 to 1).</li>
-                <li>Analyzes differences between point coordinates and window edges.</li>
-                <li>Significantly more efficient than Cohen–Sutherland.</li>
-            </ul>
-        </div>
-
-        <div class="slide">
-            <h2>Thank You!</h2>
-            <p class="subtitle">Any Questions?</p>
-            <div style="display: flex; justify-content: center; gap: 30px; font-size: 8rem; margin-top: 40px;">
-                <span>🤔</span>
-                <span>❓</span>
-            </div>
-        </div>
-    </div>
-
-    <div class="slide-counter"><span id="currentSlide">1</span> / 8</div>
-
-    <div class="controls">
-        <button class="nav-btn" id="prevBtn">←</button>
-        <button class="nav-btn" id="nextBtn">→</button>
-    </div>
-
-    <div class="progress-bar">
-        <div class="progress" id="progressBar"></div>
-    </div>
-
-    <script>
-        // Slide Navigation
-        let currentIdx = 0;
-        let isAnimating = false;
-        const slides = document.querySelectorAll('.slide');
-        const prevBtn = document.getElementById('prevBtn');
-        const nextBtn = document.getElementById('nextBtn');
-        const counter = document.getElementById('currentSlide');
-        const progressBar = document.getElementById('progressBar');
-
-        function updateUI() {
-            prevBtn.disabled = currentIdx === 0;
-            nextBtn.disabled = currentIdx === slides.length - 1;
-            counter.innerText = currentIdx + 1;
-            progressBar.style.width = ((currentIdx) / (slides.length - 1)) * 100 + '%';
-        }
-
-        function changeSlide(direction) {
-            if (isAnimating) return;
-            const newIdx = currentIdx + direction;
-            if (newIdx < 0 || newIdx >= slides.length) return;
-
-            isAnimating = true;
-            const currentSlide = slides[currentIdx];
-            const nextSlide = slides[newIdx];
-
-            if (direction > 0) {
-                currentSlide.classList.add('exit-left');
-                nextSlide.classList.add('enter-right');
-            } else {
-                currentSlide.classList.add('exit-right');
-                nextSlide.classList.add('enter-left');
-            }
-
-            nextSlide.offsetHeight;
-
-            setTimeout(() => {
-                currentSlide.classList.remove('active');
-                nextSlide.classList.add('active');
-                nextSlide.classList.remove('enter-right', 'enter-left');
-            }, 50);
-
-            setTimeout(() => {
-                currentSlide.classList.remove('exit-left', 'exit-right');
-                currentIdx = newIdx;
-                isAnimating = false;
-                updateUI();
-            }, 800);
-        }
-
-        prevBtn.onclick = () => changeSlide(-1);
-        nextBtn.onclick = () => changeSlide(1);
-
-        document.addEventListener('keydown', e => {
-            if (e.key === 'ArrowRight' || e.key === ' ') changeSlide(1);
-            if (e.key === 'ArrowLeft') changeSlide(-1);
-        });
-
-        // Drawing Canvas Logic
-        const canvas = document.getElementById('drawingCanvas');
-        const ctx = canvas.getContext('2d');
-        const penBtn = document.getElementById('penBtn');
-        const eraserBtn = document.getElementById('eraserBtn');
-        const clearBtn = document.getElementById('clearBtn');
-        let isDrawing = false;
-        let drawMode = 'none';
-
-        function resize() {
-            const temp = ctx.getImageData(0, 0, canvas.width, canvas.height);
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            ctx.putImageData(temp, 0, 0);
-        }
-        window.addEventListener('resize', resize);
-        resize();
-
-        function setMode(mode) {
-            if (drawMode === mode) {
-                drawMode = 'none';
-            } else {
-                drawMode = mode;
-            }
-            
-            canvas.classList.toggle('active', drawMode !== 'none');
-            penBtn.classList.toggle('active', drawMode === 'pen');
-            eraserBtn.classList.toggle('active', drawMode === 'eraser');
-        }
-
-        penBtn.addEventListener('click', () => setMode('pen'));
-        eraserBtn.addEventListener('click', () => setMode('eraser'));
-        clearBtn.addEventListener('click', () => ctx.clearRect(0, 0, canvas.width, canvas.height));
-
-        function getPointerPos(e) {
-            const rect = canvas.getBoundingClientRect();
-            const clientX = e.clientX || (e.touches && e.touches[0].clientX);
-            const clientY = e.clientY || (e.touches && e.touches[0].clientY);
-            return {
-                x: clientX - rect.left,
-                y: clientY - rect.top
-            };
-        }
-
-        function startDrawing(e) {
-            if (drawMode === 'none') return;
-            isDrawing = true;
-            const pos = getPointerPos(e);
-            ctx.beginPath();
-            ctx.moveTo(pos.x, pos.y);
-        }
-
-        function draw(e) {
-            if (!isDrawing || drawMode === 'none') return;
-            const pos = getPointerPos(e);
-            
-            ctx.lineWidth = drawMode === 'eraser' ? 40 : 4;
-            ctx.lineCap = 'round';
-            ctx.lineJoin = 'round';
-            
-            if (drawMode === 'eraser') {
-                ctx.globalCompositeOperation = 'destination-out';
-            } else {
-                ctx.globalCompositeOperation = 'source-over';
-                ctx.strokeStyle = '#ffffff';
-            }
-            
-            ctx.lineTo(pos.x, pos.y);
-            ctx.stroke();
-        }
-
-        function stopDrawing() {
-            isDrawing = false;
-            ctx.closePath();
-        }
-
-        canvas.addEventListener('mousedown', startDrawing);
-        canvas.addEventListener('mousemove', draw);
-        window.addEventListener('mouseup', stopDrawing);
-
-        canvas.addEventListener('touchstart', (e) => {
-            if (drawMode !== 'none') e.preventDefault();
-            startDrawing(e);
         }, { passive: false });
         
         canvas.addEventListener('touchmove', (e) => {
@@ -840,8 +399,8 @@
             draw(e);
         }, { passive: false });
         
-        window.addEventListener('touchend', stopDrawing);
-
+        window.addEventListener('touchend', stop);
+        
         updateUI();
     </script>
 </body>
