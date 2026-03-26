@@ -15,17 +15,17 @@
             margin: 0;
             padding: 0;
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            overflow-x: hidden;
+            overflow: hidden;
             background: linear-gradient(-45deg, #120A8F, #FF007A, #00C2FF, #7928CA);
             background-size: 400% 400%;
             animation: liquidGradient 15s ease infinite;
             color: #ffffff;
-            min-height: 100vh;
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             perspective: 2000px;
-            touch-action: pan-y;
+            touch-action: none;
         }
 
         @keyframes liquidGradient {
@@ -51,7 +51,7 @@
         }
 
         .slide-container {
-            width: 95vw;
+            width: 90vw;
             max-width: 1200px;
             aspect-ratio: 16 / 9;
             position: relative;
@@ -68,7 +68,7 @@
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
             box-shadow: var(--glass-shadow);
-            padding: 40px;
+            padding: 60px;
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
@@ -90,38 +90,85 @@
         .slide.enter-right { transform: rotateY(90deg) translateZ(500px); opacity: 0; }
         .slide.enter-left { transform: rotateY(-90deg) translateZ(500px); opacity: 0; }
 
-        h1 { font-size: clamp(1.5rem, 8vw, 3.5rem); text-align: center; margin-top: auto; margin-bottom: 20px; }
-        .subtitle { font-size: clamp(1rem, 5vw, 2rem); text-align: center; margin-bottom: auto; }
-        h2 { font-size: clamp(1.2rem, 6vw, 2.8rem); border-bottom: 2px solid rgba(255, 255, 255, 0.3); padding-bottom: 10px; margin-bottom: 20px; }
-        ul { font-size: clamp(0.9rem, 4vw, 1.8rem); line-height: 1.6; }
+        h1 { font-size: clamp(2rem, 8vw, 3.5rem); text-align: center; margin-top: auto; margin-bottom: 20px; }
+        .subtitle { font-size: clamp(1.2rem, 5vw, 2rem); text-align: center; margin-bottom: auto; }
+        h2 { font-size: clamp(1.8rem, 6vw, 2.8rem); border-bottom: 2px solid rgba(255, 255, 255, 0.3); padding-bottom: 15px; margin-bottom: 30px; }
+        ul { font-size: clamp(1rem, 4vw, 1.8rem); line-height: 1.7; }
 
-        #drawingCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000; pointer-events: none; }
-        #drawingCanvas.active { pointer-events: all; }
+        #drawingCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+            pointer-events: none;
+            touch-action: none;
+        }
+        #drawingCanvas.active { pointer-events: all; cursor: crosshair; }
 
-        .canvas-tools { position: fixed; top: 10px; right: 10px; display: flex; gap: 5px; z-index: 1001; flex-wrap: wrap; justify-content: flex-end; }
-        .tool-btn { background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.4); color: white; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-size: 0.9rem; }
-
-        .controls { position: fixed; bottom: 20px; right: 20px; display: flex; gap: 10px; z-index: 10; }
-        .nav-btn { background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.5); color: white; width: 45px; height: 45px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.2rem; cursor: pointer; }
-
-        .slide-counter { position: fixed; bottom: 25px; left: 20px; font-size: 1rem; font-weight: bold; }
-        .progress-bar { position: fixed; bottom: 0; left: 0; height: 4px; background: rgba(255, 255, 255, 0.1); width: 100%; }
-        .progress { height: 100%; background: #00C2FF; width: 0%; transition: width 0.4s; }
-
-        .qa-container { display: flex; justify-content: center; align-items: center; gap: 20px; margin-top: 20px; }
-        .qa-icon { font-size: clamp(3rem, 15vw, 8rem); animation: bounceBall 1.5s infinite ease-in-out; }
-
-        @keyframes bounceBall {
-            0%, 100% { transform: translateY(0) scaleY(0.8); }
-            50% { transform: translateY(-60px) scaleY(1.1); }
+        .canvas-tools {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 1001;
         }
 
-        /* Mobile specific adjustments */
+        .tool-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .tool-btn.active {
+            background: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 0 15px rgba(255,255,255,0.5);
+            transform: scale(1.05);
+        }
+
+        .controls {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            display: flex;
+            gap: 15px;
+            z-index: 10;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            transition: 0.3s;
+        }
+
+        .progress-bar { position: fixed; bottom: 0; left: 0; height: 6px; background: rgba(255, 255, 255, 0.1); width: 100%; }
+        .progress { height: 100%; background: #00C2FF; width: 0%; transition: width 0.4s ease; }
+        .slide-counter { position: fixed; bottom: 45px; left: 40px; font-size: 1.2rem; font-weight: bold; }
+
         @media (max-width: 768px) {
-            .slide-container { aspect-ratio: auto; height: 80vh; }
-            .slide { padding: 25px; }
-            .controls { bottom: 60px; right: 50%; transform: translateX(50%); }
-            .slide-counter { bottom: 65px; left: 50%; transform: translateX(-150%); }
+            .slide-container { aspect-ratio: auto; height: 75vh; width: 95vw; }
+            .slide { padding: 30px; }
+            .controls { bottom: 60px; right: 20px; }
+            .slide-counter { bottom: 65px; left: 20px; }
+            .canvas-tools { top: 10px; right: 10px; }
+            .tool-btn { padding: 8px 12px; font-size: 0.9rem; }
         }
     </style>
 </head>
@@ -138,6 +185,7 @@
     </div>
 
     <div class="slide-container" id="slideContainer">
+        <!-- Slides content (same as before) -->
         <div class="slide active">
             <h1>Line Clipping Algorithms</h1>
             <p class="subtitle">Cohen–Sutherland & Liang–Barsky</p>
@@ -179,7 +227,7 @@
 
         <div class="slide">
             <h2>Region Codes (Outcodes)</h2>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 1.4rem;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 1.4rem; padding: 20px;">
                 <div>Top → <b>1000</b></div>
                 <div>Bottom → <b>0100</b></div>
                 <div>Right → <b>0010</b></div>
@@ -190,7 +238,7 @@
 
         <div class="slide">
             <h2>Cohen-Sutherland: Steps</h2>
-            <ol style="font-size: 1.5rem; line-height: 1.6;">
+            <ol style="font-size: 1.5rem; line-height: 1.8;">
                 <li>Assign 4-bit codes to line endpoints.</li>
                 <li>If both codes are 0000 → <b>Trivially Accept</b>.</li>
                 <li>If Bitwise AND of codes ≠ 0000 → <b>Trivially Reject</b>.</li>
@@ -211,9 +259,9 @@
         <div class="slide">
             <h2>Thank You!</h2>
             <p class="subtitle">Any Questions?</p>
-            <div class="qa-container">
-                <span class="qa-icon">🤔</span>
-                <span class="qa-icon">❓</span>
+            <div style="display: flex; justify-content: center; gap: 30px; font-size: 8rem; margin-top: 40px;">
+                <span>🤔</span>
+                <span>❓</span>
             </div>
         </div>
     </div>
@@ -221,8 +269,8 @@
     <div class="slide-counter"><span id="currentSlide">1</span> / 8</div>
 
     <div class="controls">
-        <button class="nav-btn" id="prevBtn" title="Previous Slide">←</button>
-        <button class="nav-btn" id="nextBtn" title="Next Slide">→</button>
+        <button class="nav-btn" id="prevBtn">←</button>
+        <button class="nav-btn" id="nextBtn">→</button>
     </div>
 
     <div class="progress-bar">
@@ -230,6 +278,7 @@
     </div>
 
     <script>
+        // Slide Navigation
         let currentIdx = 0;
         let isAnimating = false;
         const slides = document.querySelectorAll('.slide');
@@ -237,7 +286,6 @@
         const nextBtn = document.getElementById('nextBtn');
         const counter = document.getElementById('currentSlide');
         const progressBar = document.getElementById('progressBar');
-        const container = document.getElementById('slideContainer');
 
         function updateUI() {
             prevBtn.disabled = currentIdx === 0;
@@ -263,7 +311,7 @@
                 nextSlide.classList.add('enter-left');
             }
 
-            nextSlide.offsetHeight; // trigger reflow
+            nextSlide.offsetHeight;
 
             setTimeout(() => {
                 currentSlide.classList.remove('active');
@@ -279,29 +327,15 @@
             }, 800);
         }
 
-        // Swipe & Mouse Support
-        let startX = 0;
-        const handleStart = e => { startX = e.clientX || e.touches[0].clientX; };
-        const handleEnd = e => {
-            const endX = e.clientX || e.changedTouches[0].clientX;
-            const diff = startX - endX;
-            if (Math.abs(diff) > 50) changeSlide(diff > 0 ? 1 : -1);
-        };
-
-        container.addEventListener('touchstart', handleStart, { passive: true });
-        container.addEventListener('touchend', handleEnd, { passive: true });
-        container.addEventListener('mousedown', handleStart);
-        container.addEventListener('mouseup', handleEnd);
+        prevBtn.onclick = () => changeSlide(-1);
+        nextBtn.onclick = () => changeSlide(1);
 
         document.addEventListener('keydown', e => {
             if (e.key === 'ArrowRight' || e.key === ' ') changeSlide(1);
             if (e.key === 'ArrowLeft') changeSlide(-1);
         });
 
-        prevBtn.onclick = () => changeSlide(-1);
-        nextBtn.onclick = () => changeSlide(1);
-
-        // Drawing Canvas
+        // Drawing Canvas Logic
         const canvas = document.getElementById('drawingCanvas');
         const ctx = canvas.getContext('2d');
         const penBtn = document.getElementById('penBtn');
@@ -311,49 +345,87 @@
         let drawMode = 'none';
 
         function resize() {
+            const temp = ctx.getImageData(0, 0, canvas.width, canvas.height);
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
+            ctx.putImageData(temp, 0, 0);
         }
-        window.onresize = resize;
+        window.addEventListener('resize', resize);
         resize();
 
-        function setMode(m) {
-            drawMode = drawMode === m ? 'none' : m;
+        function setMode(mode) {
+            if (drawMode === mode) {
+                drawMode = 'none';
+            } else {
+                drawMode = mode;
+            }
+            
             canvas.classList.toggle('active', drawMode !== 'none');
             penBtn.classList.toggle('active', drawMode === 'pen');
             eraserBtn.classList.toggle('active', drawMode === 'eraser');
         }
 
-        penBtn.onclick = () => setMode('pen');
-        eraserBtn.onclick = () => setMode('eraser');
-        clearBtn.onclick = () => ctx.clearRect(0, 0, canvas.width, canvas.height);
+        penBtn.addEventListener('click', () => setMode('pen'));
+        eraserBtn.addEventListener('click', () => setMode('eraser'));
+        clearBtn.addEventListener('click', () => ctx.clearRect(0, 0, canvas.width, canvas.height));
 
-        const getPos = e => ({
-            x: e.clientX || (e.touches && e.touches[0].clientX),
-            y: e.clientY || (e.touches && e.touches[0].clientY)
-        });
+        function getPointerPos(e) {
+            const rect = canvas.getBoundingClientRect();
+            const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+            const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+            return {
+                x: clientX - rect.left,
+                y: clientY - rect.top
+            };
+        }
 
-        canvas.onmousedown = canvas.ontouchstart = (e) => {
+        function startDrawing(e) {
             if (drawMode === 'none') return;
             isDrawing = true;
-            const pos = getPos(e);
+            const pos = getPointerPos(e);
             ctx.beginPath();
             ctx.moveTo(pos.x, pos.y);
-            if (e.type === 'touchstart') e.preventDefault();
-        };
+        }
 
-        window.onmousemove = window.ontouchmove = (e) => {
+        function draw(e) {
             if (!isDrawing || drawMode === 'none') return;
-            const pos = getPos(e);
+            const pos = getPointerPos(e);
+            
             ctx.lineWidth = drawMode === 'eraser' ? 40 : 4;
             ctx.lineCap = 'round';
-            ctx.strokeStyle = drawMode === 'eraser' ? 'black' : 'white';
-            ctx.globalCompositeOperation = drawMode === 'eraser' ? 'destination-out' : 'source-over';
+            ctx.lineJoin = 'round';
+            
+            if (drawMode === 'eraser') {
+                ctx.globalCompositeOperation = 'destination-out';
+            } else {
+                ctx.globalCompositeOperation = 'source-over';
+                ctx.strokeStyle = '#ffffff';
+            }
+            
             ctx.lineTo(pos.x, pos.y);
             ctx.stroke();
-        };
+        }
 
-        window.onmouseup = window.ontouchend = () => { isDrawing = false; };
+        function stopDrawing() {
+            isDrawing = false;
+            ctx.closePath();
+        }
+
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        window.addEventListener('mouseup', stopDrawing);
+
+        canvas.addEventListener('touchstart', (e) => {
+            if (drawMode !== 'none') e.preventDefault();
+            startDrawing(e);
+        }, { passive: false });
+        
+        canvas.addEventListener('touchmove', (e) => {
+            if (drawMode !== 'none') e.preventDefault();
+            draw(e);
+        }, { passive: false });
+        
+        window.addEventListener('touchend', stopDrawing);
 
         updateUI();
     </script>
