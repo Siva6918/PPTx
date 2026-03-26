@@ -95,6 +95,7 @@
             z-index: 1000;
             pointer-events: none;
             touch-action: none;
+            -ms-touch-action: none;
         }
         #drawingCanvas.active { pointer-events: all; cursor: crosshair; }
         
@@ -320,7 +321,7 @@
             if (e.key === 'ArrowLeft') changeSlide(-1);
         });
         
-        // Drawing Canvas Logic
+        // Drawing Canvas Logic (Improved for Touch, Mouse, and Pen)
         const canvas = document.getElementById('drawingCanvas');
         const ctx = canvas.getContext('2d');
         const penBtn = document.getElementById('penBtn');
@@ -354,8 +355,10 @@
         clearBtn.addEventListener('click', (e) => { e.stopPropagation(); ctx.clearRect(0, 0, canvas.width, canvas.height); });
         
         function getPos(e) {
-            const t = e.touches ? e.touches[0] : e;
-            return { x: t.clientX, y: t.clientY };
+            // Using clientX/Y since canvas is fixed top/left 0/0
+            const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+            const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+            return { x: clientX, y: clientY };
         }
         
         function start(e) {
@@ -385,21 +388,34 @@
             }
         }
         
-        canvas.addEventListener('mousedown', start);
-        canvas.addEventListener('mousemove', move);
-        window.addEventListener('mouseup', stop);
-        
-        canvas.addEventListener('touchstart', (e) => {
-            if (drawMode !== 'none') e.preventDefault();
-            start(e);
-        }, { passive: false });
-        
-        canvas.addEventListener('touchmove', (e) => {
-            if (drawMode !== 'none') e.preventDefault();
-            draw(e);
-        }, { passive: false });
-        
-        window.addEventListener('touchend', stop);
+        // Universal Pointer Events (Supports Mouse, Touch, Stylus/Pen)
+        if (window.PointerEvent) {
+            canvas.addEventListener('pointerdown', start);
+            canvas.addEventListener('pointermove', (e) => {
+                if (drawMode !== 'none') move(e);
+            });
+            window.addEventListener('pointerup', stop);
+            window.addEventListener('pointercancel', stop);
+        } else {
+            // Fallback for older browsers
+            canvas.addEventListener('mousedown', start);
+            canvas.addEventListener('mousemove', move);
+            window.addEventListener('mouseup', stop);
+            
+            canvas.addEventListener('touchstart', (e) => {
+                if (drawMode !== 'none') e.preventDefault();
+                start(e);
+            }, { passive: false });
+            
+            canvas.addEventListener('touchmove', (e) => {
+                if (drawMode !== 'none') {
+                    e.preventDefault();
+                    move(e);
+                }
+            }, { passive: false });
+            
+            window.addEventListener('touchend', stop);
+        }
         
         updateUI();
     </script>
