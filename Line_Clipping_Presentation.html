@@ -5,12 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Line Clipping Algorithms</title>
     <style>
-        /* Liquid Glass Theme (Glassmorphism) */
         :root {
-            --glass-bg: rgba(255, 255, 255, 0.1);
-            --glass-border: rgba(255, 255, 255, 0.2);
-            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.3);
-            --pen-color: #ffffff;
+            --glass-bg: rgba(255, 255, 255, 0.12);
+            --glass-border: rgba(255, 255, 255, 0.22);
+            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
         }
 
         body {
@@ -26,7 +24,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            perspective: 1500px;
+            perspective: 2000px;
             touch-action: none;
         }
 
@@ -36,7 +34,6 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* Abstract glowing orbs */
         .orb {
             position: absolute;
             border-radius: 50%;
@@ -49,7 +46,7 @@
 
         @keyframes floatOrb {
             0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(40px, -60px) scale(1.15); }
+            100% { transform: translate(40px, -60px) scale(1.1); }
         }
 
         .slide-container {
@@ -58,7 +55,6 @@
             aspect-ratio: 16 / 9;
             position: relative;
             transform-style: preserve-3d;
-            z-index: 1;
         }
 
         .slide {
@@ -77,43 +73,27 @@
             flex-direction: column;
             visibility: hidden;
             opacity: 0;
-            transition: all 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
-            transform-origin: center center;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.8s ease;
             backface-visibility: hidden;
         }
 
-        /* 3D Living Animations */
         .slide.active {
             visibility: visible;
             opacity: 1;
             transform: translateZ(0) rotateY(0);
         }
 
-        /* Forward (Right Swipe) */
-        .slide.exit-left {
-            transform: translateZ(-500px) rotateY(-90deg);
-            opacity: 0;
-        }
-        .slide.enter-right {
-            transform: translateZ(-500px) rotateY(90deg);
-            opacity: 0;
-        }
+        /* 3D Visual Transition Effects */
+        .slide.exit-left { transform: translateZ(-500px) rotateY(-90deg); opacity: 0; }
+        .slide.exit-right { transform: translateZ(-500px) rotateY(90deg); opacity: 0; }
+        .slide.enter-right { transform: translateZ(-500px) rotateY(90deg); opacity: 0; }
+        .slide.enter-left { transform: translateZ(-500px) rotateY(-90deg); opacity: 0; }
 
-        /* Backward (Left Swipe) */
-        .slide.exit-right {
-            transform: translateZ(-500px) rotateY(90deg);
-            opacity: 0;
-        }
-        .slide.enter-left {
-            transform: translateZ(-500px) rotateY(-90deg);
-            opacity: 0;
-        }
+        h1 { font-size: 3.5rem; text-align: center; margin-top: auto; margin-bottom: 20px; text-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .subtitle { font-size: 2rem; text-align: center; margin-bottom: auto; color: rgba(255, 255, 255, 0.9); }
+        h2 { font-size: 2.8rem; border-bottom: 2px solid rgba(255, 255, 255, 0.3); padding-bottom: 15px; margin-bottom: 30px; }
+        ul { font-size: 1.8rem; line-height: 1.7; flex-grow: 1; }
 
-        h1 { font-size: 3.8rem; text-align: center; margin-top: auto; margin-bottom: 20px; text-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-        .subtitle { font-size: 2.2rem; text-align: center; margin-bottom: auto; opacity: 0.9; }
-        h2 { font-size: 3rem; border-bottom: 2px solid rgba(255,255,255,0.3); padding-bottom: 15px; margin-bottom: 30px; }
-        ul { font-size: 1.8rem; line-height: 1.8; flex-grow: 1; }
-        
         #drawingCanvas {
             position: fixed;
             top: 0;
@@ -130,19 +110,18 @@
             top: 20px;
             right: 20px;
             display: flex;
-            gap: 12px;
+            gap: 10px;
             z-index: 101;
         }
         .tool-btn {
-            background: rgba(255, 255, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
             color: white;
-            padding: 10px 18px;
-            border-radius: 14px;
+            padding: 10px 15px;
+            border-radius: 12px;
             cursor: pointer;
             backdrop-filter: blur(10px);
             transition: 0.3s;
-            font-weight: 600;
         }
         .tool-btn.active { background: rgba(255, 255, 255, 0.4); box-shadow: 0 0 15px rgba(255,255,255,0.4); }
 
@@ -154,21 +133,21 @@
             gap: 15px;
             z-index: 10;
         }
-        button.nav-btn {
-            background: rgba(255, 255, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.5);
             color: white;
-            width: 54px;
-            height: 54px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             cursor: pointer;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             transition: 0.3s;
         }
-        button.nav-btn:hover:not(:disabled) { background: rgba(255,255,255,0.3); transform: scale(1.1); }
+        .nav-btn:hover:not(:disabled) { background: rgba(255, 255, 255, 0.4); transform: scale(1.1); }
 
         .progress-bar {
             position: absolute;
@@ -181,19 +160,29 @@
         }
         .progress {
             height: 100%;
-            background: linear-gradient(90deg, #00C2FF, #FF007A);
+            background: #00C2FF;
             width: 0%;
-            transition: width 0.6s ease;
-            box-shadow: 0 0 10px rgba(0, 194, 255, 0.5);
+            transition: width 0.4s ease;
         }
 
         .slide-counter {
             position: absolute;
             bottom: 45px;
             left: 40px;
-            font-size: 1.3rem;
-            font-weight: 600;
-            letter-spacing: 1px;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        /* Last Slide Animation */
+        .qa-icon {
+            font-size: 8rem;
+            margin: 20px 0;
+            display: inline-block;
+            animation: bounce 2s infinite ease-in-out;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-30px); }
         }
     </style>
 </head>
@@ -247,23 +236,23 @@
 
         <div class="slide">
             <h2>Region Codes (Outcodes)</h2>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; font-size: 2rem; margin-top: 40px;">
-                <div style="text-align: right;">Top → <b>1000</b></div>
-                <div style="text-align: left;">Bottom → <b>0100</b></div>
-                <div style="text-align: right;">Right → <b>0010</b></div>
-                <div style="text-align: left;">Left → <b>0001</b></div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 1.8rem; margin-top: 30px;">
+                <div>Top → <b>1000</b></div>
+                <div>Bottom → <b>0100</b></div>
+                <div>Right → <b>0010</b></div>
+                <div>Left → <b>0001</b></div>
+                <div style="grid-column: span 2; text-align: center; margin-top: 20px;">Inside Window → <b>0000</b></div>
             </div>
-            <div style="text-align: center; margin-top: 40px; font-size: 2.2rem;">Inside Window → <b>0000</b></div>
         </div>
 
         <div class="slide">
             <h2>Cohen-Sutherland: Steps</h2>
-            <ul style="list-style-type: decimal;">
+            <ol style="font-size: 1.6rem; line-height: 1.8;">
                 <li>Assign 4-bit codes to line endpoints.</li>
                 <li>If both codes are 0000 → <b>Trivially Accept</b>.</li>
                 <li>If Bitwise AND of codes ≠ 0000 → <b>Trivially Reject</b>.</li>
                 <li>Else → Find intersection and clip. Repeat.</li>
-            </ul>
+            </ol>
         </div>
 
         <div class="slide">
@@ -277,9 +266,11 @@
         </div>
 
         <div class="slide">
-            <h1>Thank You!</h1>
-            <p class="subtitle">Any Questions?</p>
-            <div style="font-size: 8rem; text-align: center; margin-top: 20px;">🤔❓</div>
+            <div style="text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%;">
+                <h1>Thank You!</h1>
+                <p class="subtitle">Any Questions?</p>
+                <div class="qa-icon">🤔❓</div>
+            </div>
         </div>
 
         <div class="slide-counter"><span id="currentSlide">1</span> / 8</div>
@@ -316,7 +307,6 @@
             const currentSlide = slides[currentIdx];
             const nextSlide = slides[newIdx];
 
-            // Set up exit/entry classes
             if (direction > 0) {
                 currentSlide.classList.add('exit-left');
                 nextSlide.classList.add('enter-right');
@@ -325,10 +315,8 @@
                 nextSlide.classList.add('enter-left');
             }
 
-            // Force reflow
-            nextSlide.offsetHeight;
+            nextSlide.offsetHeight; // Force reflow
 
-            // Trigger animation
             setTimeout(() => {
                 currentSlide.classList.remove('active');
                 nextSlide.classList.add('active');
@@ -343,41 +331,21 @@
             }, 800);
         }
 
-        // SWIPE DETECTION
+        // SWIPE DETECTION FIX
         let startX = 0;
-        let startY = 0;
-
-        window.addEventListener('touchstart', e => {
-            startX = e.touches[0].clientX;
-            startY = e.touches[0].clientY;
-        }, { passive: true });
-
-        window.addEventListener('touchend', e => {
-            const endX = e.changedTouches[0].clientX;
-            const endY = e.changedTouches[0].clientY;
-            const dx = endX - startX;
-            const dy = endY - startY;
-
-            if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
-                if (dx > 0) changeSlide(-1); // Swipe Right -> Previous
-                else changeSlide(1);        // Swipe Left -> Next
-            }
-        }, { passive: true });
-
-        // Mouse Swipe
         let isMouseDown = false;
-        window.addEventListener('mousedown', e => {
-            startX = e.clientX;
-            isMouseDown = true;
-        });
-        window.addEventListener('mouseup', e => {
+
+        container.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
+        container.addEventListener('touchend', e => {
+            const dx = e.changedTouches[0].clientX - startX;
+            if (Math.abs(dx) > 50) changeSlide(dx > 0 ? -1 : 1);
+        }, { passive: true });
+
+        container.addEventListener('mousedown', e => { startX = e.clientX; isMouseDown = true; });
+        container.addEventListener('mouseup', e => {
             if (!isMouseDown) return;
-            const endX = e.clientX;
-            const dx = endX - startX;
-            if (Math.abs(dx) > 100) {
-                if (dx > 0) changeSlide(-1);
-                else changeSlide(1);
-            }
+            const dx = e.clientX - startX;
+            if (Math.abs(dx) > 100) changeSlide(dx > 0 ? -1 : 1);
             isMouseDown = false;
         });
 
@@ -386,8 +354,8 @@
             if (e.key === 'ArrowLeft') changeSlide(-1);
         });
 
-        prevBtn.addEventListener('click', () => changeSlide(-1));
-        nextBtn.addEventListener('click', () => changeSlide(1));
+        prevBtn.onclick = () => changeSlide(-1);
+        nextBtn.onclick = () => changeSlide(1);
 
         // Drawing Canvas
         const canvas = document.getElementById('drawingCanvas');
@@ -399,15 +367,12 @@
         let isDrawing = false;
         let mode = 'none';
 
-        function resize() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resize);
+        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.onresize = resize;
         resize();
 
-        function setMode(newMode) {
-            mode = mode === newMode ? 'none' : newMode;
+        function setMode(m) {
+            mode = mode === m ? 'none' : m;
             canvas.classList.toggle('active', mode !== 'none');
             penBtn.classList.toggle('active', mode === 'pen');
             eraserBtn.classList.toggle('active', mode === 'eraser');
@@ -421,12 +386,10 @@
             if (!isDrawing || mode === 'none') return;
             const x = e.clientX || e.touches[0].clientX;
             const y = e.clientY || e.touches[0].clientY;
-
             ctx.lineWidth = mode === 'eraser' ? 40 : 4;
             ctx.lineCap = 'round';
             ctx.strokeStyle = mode === 'eraser' ? 'black' : 'white';
             ctx.globalCompositeOperation = mode === 'eraser' ? 'destination-out' : 'source-over';
-
             ctx.lineTo(x, y);
             ctx.stroke();
             ctx.beginPath();
@@ -436,9 +399,8 @@
         canvas.addEventListener('mousedown', e => { isDrawing = true; ctx.beginPath(); draw(e); });
         canvas.addEventListener('mousemove', draw);
         window.addEventListener('mouseup', () => isDrawing = false);
-
-        canvas.addEventListener('touchstart', e => { isDrawing = true; ctx.beginPath(); draw(e); });
-        canvas.addEventListener('touchmove', draw);
+        canvas.addEventListener('touchstart', e => { isDrawing = true; ctx.beginPath(); draw(e); }, { passive: false });
+        canvas.addEventListener('touchmove', draw, { passive: false });
         window.addEventListener('touchend', () => isDrawing = false);
 
         updateUI();
