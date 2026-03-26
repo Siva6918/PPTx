@@ -172,87 +172,232 @@
     </div>
     
     <div class="slide-container" id="slideContainer">
+        <div class="slide-container">
+
+        <!-- Slide 1 -->
         <div class="slide active">
             <h1>Line Clipping Algorithms</h1>
-            <p class="subtitle">Cohen–Sutherland & Liang–Barsky</p>
-            <p style="text-align: center; margin-top: 20px; font-size: 1.2rem;">
-                Venkata Siva Reddy. V<br><br>
-                23091A05T2<br><br>
-                CSE
-            </p>
+            <div class="subtitle">Cohen–Sutherland & Liang–Barsky</div>
+            <div style="margin-top: 60px; text-align: center; font-size: 1.5rem; color: rgba(255,255,255,0.8);">
+                Venkata Siva Reddy. V<br>23091A05T2<br>Computer Science and Engineering
+            </div>
         </div>
-        
+
+        <!-- Slide 2 -->
         <div class="slide">
             <h2>Introduction</h2>
-            <ul>
-                <li>Line clipping removes invisible parts of lines.</li>
-                <li>Uses a defined rectangular <b>clipping window</b>.</li>
-                <li>Maintains visual accuracy while rendering.</li>
-                <li>Improves rendering performance drastically.</li>
-            </ul>
+            <div class="content-wrap">
+                <div class="text-wrap">
+                    <ul>
+                        <li>Line clipping removes invisible parts of lines.</li>
+                        <li>Uses a defined rectangular <b>clipping window</b>.</li>
+                        <li>Maintains visual accuracy while rendering.</li>
+                        <li>Improves rendering performance drastically.</li>
+                    </ul>
+                </div>
+                <div class="image-wrap">
+                    <img src="https://www.includehelp.com/computer-graphics/Images/clipping-1.jpg"
+                        alt="Clipping Before and After">
+                </div>
+            </div>
         </div>
-        
+
+        <!-- Slide 3 -->
         <div class="slide">
             <h2>Types of Cases</h2>
-            <ul>
-                <li>✅ <b>Line completely inside</b> → Accept</li>
-                <li>❌ <b>Line completely outside</b> → Reject</li>
-                <li>✂️ <b>Line partially inside</b> → Clip</li>
-            </ul>
+            <div class="center-content text-wrap">
+                <ul style="list-style: none; padding: 0;">
+                    <li
+                        style="background: rgba(46, 204, 113, 0.3); padding: 20px; border-radius: 12px; margin-bottom: 25px; border: 1px solid rgba(46, 204, 113, 0.5);">
+                        ✅ <b>Line completely inside</b> → Accept</li>
+                    <li
+                        style="background: rgba(231, 76, 60, 0.3); padding: 20px; border-radius: 12px; margin-bottom: 25px; border: 1px solid rgba(231, 76, 60, 0.5);">
+                        ❌ <b>Line completely outside</b> → Reject</li>
+                    <li
+                        style="background: rgba(241, 196, 15, 0.3); padding: 20px; border-radius: 12px; border: 1px solid rgba(241, 196, 15, 0.5);">
+                        ✂️ <b>Line partially inside</b> → Clip</li>
+                </ul>
+            </div>
         </div>
-        
+
+        <!-- Slide 4 -->
         <div class="slide">
             <h2>Cohen–Sutherland Concept</h2>
-            <ul>
-                <li>Divides coordinate space into <b>9 regions</b>.</li>
-                <li>Assigns <b>4-bit region codes</b> (Outcodes).</li>
-                <li>Each endpoint of a line gets an Outcode.</li>
-                <li>Quickly assesses trivial accept/reject.</li>
-            </ul>
+            <div class="content-wrap">
+                <div class="text-wrap">
+                    <ul>
+                        <li>Divides coordinate space into <b>9 regions</b>.</li>
+                        <li>Assigns <b>4-bit region codes</b> (Outcodes).</li>
+                        <li>Each endpoint of a line gets an Outcode.</li>
+                        <li>Quickly assesses trivial accept/reject.</li>
+                    </ul>
+                </div>
+                <div class="image-wrap">
+                    <img src="https://www.eecs.berkeley.edu/~sequin/CS184/LECT04/Outcodes.GIF" alt="Region Codes">
+                </div>
+            </div>
         </div>
-        
+
+        <!-- Slide 5 -->
         <div class="slide">
             <h2>Region Codes (Outcodes)</h2>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 1.4rem; padding: 20px;">
-                <div>Top → <b>1000</b></div>
-                <div>Bottom → <b>0100</b></div>
-                <div>Right → <b>0010</b></div>
-                <div>Left → <b>0001</b></div>
-                <div style="grid-column: span 2; text-align: center;">Inside Window → <b>0000</b></div>
+            <div class="content-wrap">
+                <div class="text-wrap" style="text-align: center;">
+                    <p style="font-size: 1.8rem;">Every region receives a 4-bit binary code (TBRL)</p>
+                    <div
+                        style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 30px; font-size: 1.5rem;">
+                        <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px;">Top &rarr;
+                            <b style="color:#00C2FF">1000</b>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px;">Bottom
+                            &rarr; <b style="color:#00C2FF">0100</b></div>
+                        <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px;">Right &rarr;
+                            <b style="color:#00C2FF">0010</b>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px;">Left &rarr;
+                            <b style="color:#00C2FF">0001</b>
+                        </div>
+                    </div>
+                    <div
+                        style="margin-top: 20px; background: rgba(46, 204, 113, 0.3); padding: 15px; border-radius: 10px; font-size: 1.8rem; border: 1px solid rgba(46, 204, 113, 0.5);">
+                        Inside Window &rarr; <b>0000</b>
+                    </div>
+                </div>
             </div>
         </div>
-        
+
+        <!-- Slide 6 -->
         <div class="slide">
-            <h2>Cohen-Sutherland: Steps</h2>
-            <ol>
-                <li>Assign 4-bit codes to line endpoints.</li>
-                <li>If both codes are 0000 → <b>Trivially Accept</b>.</li>
-                <li>If Bitwise AND of codes ≠ 0000 → <b>Trivially Reject</b>.</li>
-                <li>Else → Find intersection and clip. Repeat.</li>
-            </ol>
+            <h2>Cohen-Sutherland: Working Steps</h2>
+            <div class="text-wrap">
+                <ol style="font-size: 1.8rem; line-height: 1.8;">
+                    <li>Assign 4-bit region codes to both line endpoints.</li>
+                    <li>If both codes are <code>0000</code> &rarr; <b>Trivially Accept</b>.</li>
+                    <li>If Bitwise <code>AND</code> of codes &ne; <code>0000</code> &rarr; <b>Trivially Reject</b>.</li>
+                    <li>Else &rarr; Find intersection point with window boundary and clip. Repeat.</li>
+                </ol>
+            </div>
         </div>
-        
+
+        <!-- Slide 7 -->
+        <div class="slide">
+            <h2>Cohen-Sutherland: Pros & Cons</h2>
+            <div class="content-wrap">
+                <div class="text-wrap"
+                    style="background: rgba(46, 204, 113, 0.15); padding: 30px; border-radius: 15px; border: 1px solid rgba(46, 204, 113, 0.3);">
+                    <h3 style="margin-top: 0; color: #2ecc71; font-size: 2.2rem;">Advantages</h3>
+                    <ul>
+                        <li>Simple and easy to understand.</li>
+                        <li>Extremely fast for basic cases (trivial accept/reject).</li>
+                    </ul>
+                </div>
+                <div class="text-wrap"
+                    style="background: rgba(231, 76, 60, 0.15); padding: 30px; border-radius: 15px; border: 1px solid rgba(231, 76, 60, 0.3);">
+                    <h3 style="margin-top: 0; color: #e74c3c; font-size: 2.2rem;">Disadvantages</h3>
+                    <ul>
+                        <li>Requires recursive intersection checks.</li>
+                        <li>More calculations needed for lines crossing multiple boundaries.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8 -->
         <div class="slide">
             <h2>Liang–Barsky Concept</h2>
-            <ul>
-                <li>Uses the <b>parametric equation</b> of a line.</li>
-                <li>Focuses on a parameter <b>t</b> (0 to 1).</li>
-                <li>Analyzes differences between point coordinates and window edges.</li>
-                <li>Significantly more efficient than Cohen–Sutherland.</li>
-            </ul>
-        </div>
-        
-        <div class="slide">
-            <h2>Thank You!</h2>
-            <p class="subtitle">Any Questions?</p>
-            <div style="display: flex; justify-content: center; gap: 30px; font-size: 8rem; margin-top: 40px;">
-                <span>🤔</span>
-                <span>❓</span>
+            <div class="content-wrap">
+                <div class="text-wrap">
+                    <ul>
+                        <li>Uses the <b>parametric equation</b> of a line.</li>
+                        <li>Focuses on a parameter <b><i>t</i></b> (0 to 1).</li>
+                        <li>Analyzes differences between point coordinates and window edges.</li>
+                        <li>Significantly more efficient than Cohen–Sutherland.</li>
+                    </ul>
+                </div>
+                <div class="image-wrap">
+                    <img src="https://www.mdpi.com/jimaging/jimaging-08-00286/article_deploy/html/images/jimaging-08-00286-g014-550.jpg"
+                        alt="Liang Barsky">
+                </div>
             </div>
         </div>
-    </div>
+
+        <!-- Slide 9 -->
+        <div class="slide">
+            <h2>Parametric Line Equation</h2>
+            <div class="center-content">
+                <p style="font-size: 2rem; margin-bottom: 10px;">A line segment can be defined parametrically:</p>
+                <div class="code-box">
+                    x = x₁ + t &times; (x₂ &minus; x₁)<br>
+                    y = y₁ + t &times; (y₂ &minus; y₁)
+                </div>
+                <p
+                    style="font-size: 1.8rem; background: rgba(255,255,255,0.2); padding: 15px 30px; border-radius: 30px;">
+                    Valid <b><i>t</i></b> ranges from <b>0</b> to <b>1</b>
+                </p>
+            </div>
+        </div>
+
+        <!-- Slide 10 -->
+        <div class="slide">
+            <h2>Liang-Barsky: Working Steps</h2>
+            <div class="text-wrap">
+                <ol style="font-size: 1.8rem; line-height: 1.8;">
+                    <li>Define directional values <b>p</b> (line direction) and <b>q</b> (distance to edge).</li>
+                    <li>Calculate intersection parameter <b><i>t</i></b> = q / p for all 4 edges.</li>
+                    <li>Find valid <b>t<sub>1</sub></b> (line entering) and <b>t<sub>2</sub></b> (line exiting).</li>
+                    <li>If t<sub>1</sub> &lt; t<sub>2</sub>, calculate new endpoints. Else, reject.</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- Slide 11 -->
+        <div class="slide">
+            <h2>Liang-Barsky: Pros & Cons</h2>
+            <div class="content-wrap">
+                <div class="text-wrap"
+                    style="background: rgba(46, 204, 113, 0.15); padding: 30px; border-radius: 15px; border: 1px solid rgba(46, 204, 113, 0.3);">
+                    <h3 style="margin-top: 0; color: #2ecc71; font-size: 2.2rem;">Advantages</h3>
+                    <ul>
+                        <li>Fewer intersection calculations needed.</li>
+                        <li>Highly efficient math execution.</li>
+                        <li>Checks all edges simultaneously.</li>
+                    </ul>
+                </div>
+                <div class="text-wrap"
+                    style="background: rgba(241, 196, 15, 0.15); padding: 30px; border-radius: 15px; border: 1px solid rgba(241, 196, 15, 0.3);">
+                    <h3 style="margin-top: 0; color: #f1c40f; font-size: 2.2rem;">Disadvantages</h3>
+                    <ul>
+                        <li>Mathematical theory is slightly more complex to grasp.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12 -->
+        <div class="slide">
+            <h2>Conclusion</h2>
+            <div class="center-content">
+                <ul
+                    style="text-align: left; background: rgba(0,0,0,0.2); padding: 40px 40px 40px 80px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.2);">
+                    <li>Line Clipping is vital for saving processing power and rendering time.</li>
+                    <li style="margin-top: 20px;"><b>Cohen–Sutherland</b> provides an intuitive, simple approach.</li>
+                    <li style="margin-top: 20px;"><b>Liang–Barsky</b> offers a heavily optimized, mathematical approach.
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 13 -->
+        <div class="slide">
+            <div class="center-content">
+                <h1 style="font-size: 4rem;">Any Questions?</h1>
+                <div class="qa-icon">🤔❓</div>
+                <h2 style="border: none; margin-top: 20px; font-weight: 400; color: rgba(255,255,255,0.8);">Thank You!
+                </h2>
+            </div>
+        </div>
     
-    <div class="slide-counter"><span id="currentSlide">1</span> / 8</div>
+   <div class="slide-counter"><span id="currentSlide">1</span> / <span id="totalSlides">13</span></div>
     
     <div class="controls">
         <button class="nav-btn" id="prevBtn">←</button>
