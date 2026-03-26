@@ -149,6 +149,315 @@
         .progress-bar { position: fixed; bottom: 0; left: 0; height: 6px; background: rgba(255, 255, 255, 0.1); width: 100%; }
         .progress { height: 100%; background: #00C2FF; width: 0%; transition: width 0.4s ease; }
         .slide-counter { position: fixed; bottom: 45px; left: 40px; font-size: 1.2rem; font-weight: bold; }
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.15);
+            --glass-border: rgba(255, 255, 255, 0.25);
+            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            overflow: hidden;
+            /* Liquid gradient animation */
+            background: linear-gradient(45deg, #120A8F, #FF007A, #00C2FF, #7928CA);
+            background-size: 300% 300%;
+            animation: liquidGradient 12s ease infinite;
+            color: #ffffff;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Abstract glowing orbs for liquid effect */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: -1;
+            animation: floatOrb 10s infinite ease-in-out alternate;
+        }
+
+        .orb-1 {
+            width: 400px;
+            height: 400px;
+            background: rgba(0, 194, 255, 0.5);
+            top: -100px;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .orb-2 {
+            width: 500px;
+            height: 500px;
+            background: rgba(255, 0, 122, 0.5);
+            bottom: -150px;
+            right: 5%;
+            animation-delay: -3s;
+        }
+
+        @keyframes liquidGradient {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        @keyframes floatOrb {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            100% {
+                transform: translate(30px, -50px) scale(1.1);
+            }
+        }
+
+        /* 16:9 Aspect Ratio Slide Container */
+        .slide-container {
+            width: 85vw;
+            max-width: 1280px;
+            aspect-ratio: 16 / 9;
+            position: relative;
+            background: var(--glass-bg);
+            border-radius: 24px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-top: 1px solid rgba(255, 255, 255, 0.4);
+            border-left: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: var(--glass-shadow);
+            padding: 60px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .slide {
+            display: none;
+            height: 100%;
+            width: 100%;
+            flex-direction: column;
+            animation: fadeSlideIn 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+        }
+
+        .slide.active {
+            display: flex;
+        }
+
+        @keyframes fadeSlideIn {
+            from {
+                opacity: 0;
+                transform: scale(0.96) translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 3.5rem;
+            text-align: center;
+            font-weight: 800;
+            letter-spacing: 1px;
+            margin-top: auto;
+            margin-bottom: 20px;
+            text-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .subtitle {
+            font-size: 2rem;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: auto;
+        }
+
+        h2 {
+            font-size: 2.8rem;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+            padding-bottom: 15px;
+            margin-top: 0;
+            margin-bottom: 30px;
+            font-weight: 600;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        ul {
+            font-size: 1.8rem;
+            line-height: 1.7;
+            flex-grow: 1;
+            padding-left: 40px;
+        }
+
+        li {
+            margin-bottom: 20px;
+        }
+
+        li::marker {
+            color: #00C2FF;
+            font-weight: bold;
+        }
+
+        .content-wrap {
+            display: flex;
+            gap: 40px;
+            height: 100%;
+        }
+
+        .text-wrap {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .image-wrap {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+
+        img {
+            max-height: 220px;
+            max-width: 100%;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 5px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s;
+        }
+
+        img:hover {
+            transform: scale(1.05);
+        }
+
+        .center-content {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+
+        .center-content h1 {
+            margin-top: 0;
+        }
+
+        .code-box {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 12px;
+            font-family: monospace;
+            font-size: 1.8rem;
+            text-align: center;
+            margin: 20px 0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Controls */
+        .controls {
+            position: absolute;
+            bottom: 40px;
+            right: 40px;
+            display: flex;
+            gap: 15px;
+            z-index: 10;
+        }
+
+        button {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            color: white;
+            width: 50px;
+            height: 50px;
+            font-size: 1.5rem;
+            border-radius: 50%;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        button:hover {
+            background: rgba(255, 255, 255, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            width: 100%;
+            border-bottom-left-radius: 24px;
+            border-bottom-right-radius: 24px;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background: #00C2FF;
+            width: 0%;
+            transition: width 0.4s ease;
+            box-shadow: 0 0 10px #00C2FF;
+        }
+
+        /* Slide Counter */
+        .slide-counter {
+            position: absolute;
+            bottom: 45px;
+            left: 40px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Custom specific slide styles */
+        .qa-icon {
+            font-size: 8rem;
+            margin: 20px 0;
+            animation: bounce 2s infinite ease-in-out;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
         
         @media (max-width: 768px) {
             .slide-container { aspect-ratio: auto; height: 75vh; width: 95vw; }
