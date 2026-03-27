@@ -225,27 +225,6 @@
             transform: none;
             box-shadow: none;
         }
-
-        .progress-bar {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            height: 6px;
-            background: rgba(255, 255, 255, 0.1);
-            width: 100%;
-            border-bottom-left-radius: 24px;
-            border-bottom-right-radius: 24px;
-            overflow: hidden;
-        }
-
-        .progress {
-            height: 100%;
-            background: #00C2FF;
-            width: 0%;
-            transition: width 0.4s ease;
-            box-shadow: 0 0 10px #00C2FF;
-        }
-
         /* Slide Counter */
         .slide-counter {
             position: absolute;
@@ -767,8 +746,6 @@
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
         const counter = document.getElementById('currentSlide');
-        const progressBar = document.getElementById('progressBar');
-
         // Background Mode Logic
         let bgMode = 0;
         const slideToMode = [
@@ -815,7 +792,6 @@
             nextBtn.disabled = currentIdx === slides.length - 1;
 
             counter.innerText = currentIdx + 1;
-            progressBar.style.width = ((currentIdx) / (slides.length - 1)) * 100 + '%';
         }
 
         // Initialize UI
